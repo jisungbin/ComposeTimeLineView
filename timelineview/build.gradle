@@ -5,8 +5,8 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'io.github.jisungbin'
-    PUBLISH_VERSION = '1.0.0'
-    PUBLISH_ARTIFACT_ID = 'TimeLineView'
+    PUBLISH_VERSION = '1.0.1'
+    PUBLISH_ARTIFACT_ID = 'timelineview'
     PUBLISH_DESCRIPTION = 'android TimeLineView that made with jetpack-compose'
     PUBLISH_URL = 'https://github.com/jisungbin/TimeLineView'
     PUBLISH_LICENSE_NAME = 'MIT License'

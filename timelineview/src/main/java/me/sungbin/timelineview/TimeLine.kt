@@ -46,14 +46,8 @@ fun <T> TimeLine(
                 content(
                     Modifier.constrainAs(timeLineContent) {
                         start.linkTo(circle.end, timeLinePadding.contentStart)
-                        top.linkTo(
-                            parent.top,
-                            if (index != 0) timeLinePadding.contentTop else 0.dp
-                        )
-                        bottom.linkTo(
-                            parent.bottom,
-                            if (index != items.size - 1) timeLinePadding.contentBottom else 0.dp
-                        )
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
                     },
                     item
                 )
