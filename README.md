@@ -3,7 +3,7 @@ android TimeLineView that made with jetpack-compose
 
 # Download
 ```groovy
-implementation "io.github.jisungbin:timelineview:${version}
+implementation "io.github.jisungbin:timelineview:${version}"
 ```
 
 # Usage
