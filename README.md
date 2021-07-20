@@ -8,3 +8,6 @@ implementation "io.github.jisungbin:timelineview:${version}"
 
 # Usage
 // todo
+
+# todo
+1. sticky
