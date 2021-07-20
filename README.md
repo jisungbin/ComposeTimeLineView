@@ -11,3 +11,7 @@ implementation "io.github.jisungbin:timelineview:${version}"
 
 # todo
 1. sticky
+
+---
+
+# 🤗 Happy Coding :)
