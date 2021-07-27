@@ -5,7 +5,7 @@ plugins {
 
 ext {
     PUBLISH_GROUP_ID = 'io.github.jisungbin'
-    PUBLISH_VERSION = '1.0.1'
+    PUBLISH_VERSION = '1.0.2'
     PUBLISH_ARTIFACT_ID = 'timelineview'
     PUBLISH_DESCRIPTION = 'android TimeLineView that made with jetpack-compose'
     PUBLISH_URL = 'https://github.com/jisungbin/TimeLineView'
@@ -53,5 +53,5 @@ dependencies {
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.material:material:$compose_version"
     implementation "androidx.compose.ui:ui-tooling:$compose_version"
-    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha08"
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta01"
 }
