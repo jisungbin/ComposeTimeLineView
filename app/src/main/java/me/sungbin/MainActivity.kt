@@ -7,8 +7,10 @@ import androidx.compose.foundation.background
 import androidx.compose.material.Text
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import me.sungbin.timelineview.TimeLine
 import me.sungbin.timelineview.TimeLineItem
+import me.sungbin.timelineview.TimeLineOption
 
 class MainActivity : AppCompatActivity() {
 
@@ -34,9 +36,10 @@ class MainActivity : AppCompatActivity() {
                     Item(4),
                     Item(5),
                 ),
+                timeLineOption = TimeLineOption(contentHeight = 50.dp),
                 modifier = Modifier.background(Color.White),
-                header = { index ->
-                    Text(text = "This is $index index header.")
+                header = { key ->
+                    Text(text = "This is $key index header.")
                 },
                 content = { item ->
                     Text(text = "This is ${item.key} item.")

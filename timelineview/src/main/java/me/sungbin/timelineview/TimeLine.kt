@@ -23,10 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
-// todo: sticky header content
-// todo: main item content
-// todo: fix index calc error
-// todo: migration data class to interface & impl
+private const val headerIndex = -1
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -49,7 +46,7 @@ fun <K, E : TimeLineItem<K>> TimeLine(
                     groupSize = groupedItems.size,
                     groupIndex = groupIndex,
                     elementsSize = elements.size,
-                    elementsIndex = 0,
+                    elementsIndex = headerIndex,
                     timeLineOption = timeLineOption,
                     timeLinePadding = timeLinePadding,
                     isHeader = true,
@@ -58,22 +55,20 @@ fun <K, E : TimeLineItem<K>> TimeLine(
                 )
             }
 
-            if (elements.size > 1) {
-                itemsIndexed(elements.drop(1)) { elementIndex, element ->
-                    TimeLineView(
-                        key = key,
-                        item = element,
-                        groupSize = groupedItems.size,
-                        groupIndex = groupIndex,
-                        elementsSize = elements.size,
-                        elementsIndex = elementIndex + 1,
-                        timeLineOption = timeLineOption,
-                        timeLinePadding = timeLinePadding,
-                        isHeader = false,
-                        header = header,
-                        content = content
-                    )
-                }
+            itemsIndexed(elements) { elementIndex, element ->
+                TimeLineView(
+                    key = key,
+                    item = element,
+                    groupSize = groupedItems.size,
+                    groupIndex = groupIndex,
+                    elementsSize = elements.size,
+                    elementsIndex = elementIndex,
+                    timeLineOption = timeLineOption,
+                    timeLinePadding = timeLinePadding,
+                    isHeader = false,
+                    header = header,
+                    content = content
+                )
             }
         }
     }
@@ -112,7 +107,7 @@ private fun <K, E : TimeLineItem<K>> TimeLineView(
                     bottom.linkTo(timeLineContent.bottom)
                 }
         )
-        if (isHeader) {
+        if (!isHeader) {
             Divider(
                 modifier = Modifier.constrainAs(circleInnerLine) {
                     top.linkTo(circle.top)
@@ -138,7 +133,7 @@ private fun <K, E : TimeLineItem<K>> TimeLineView(
                 content(item)
             }
         }
-        if (groupIndex != 0 && elementsIndex != 0) {
+        if (!(groupIndex == 0 && elementsIndex == headerIndex)) {
             Divider(
                 modifier = Modifier.constrainAs(topLine) {
                     top.linkTo(parent.top)
@@ -154,7 +149,7 @@ private fun <K, E : TimeLineItem<K>> TimeLineView(
                 color = timeLineOption.lineColor
             )
         }
-        if (groupIndex != groupSize - 1 && elementsIndex != elementsSize - 1) {
+        if (!(groupIndex == groupSize - 1 && elementsIndex == elementsSize - 1)) {
             Divider(
                 modifier = Modifier.constrainAs(bottomLine) {
                     top.linkTo(
