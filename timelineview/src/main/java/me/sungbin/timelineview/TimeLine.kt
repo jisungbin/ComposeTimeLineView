@@ -1,3 +1,9 @@
+/*
+ * Copyright (c) 2021. Sungbin Ji. All rights reserved.
+ *
+ * TimeLineView license is under the MIT license.
+ */
+
 package me.sungbin.timelineview
 
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -10,9 +16,16 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+
+// todo: sticky header content
+// todo: main item content
+// todo: fix index calc error
+// todo: migration data class to interface & impl
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -26,40 +39,25 @@ fun <K, E : TimeLineItem<K>> TimeLine(
     LazyColumn(modifier = modifier, contentPadding = timeLinePadding.defaultPadding) {
         val groupedItems = items.groupBy { it.key }
 
-        groupedItems.onEachIndexed { index, entry ->
-            val values = entry.value
+        groupedItems.forEach { (_, values) ->
+            stickyHeader {
+                TimeLineContent(
+                    item = values.first(),
+                    items = items,
+                    timeLineOption = timeLineOption,
+                    timeLinePadding = timeLinePadding,
+                    content = content
+                )
+            }
 
-            if (values.size == 1) {
-                stickyHeader {
-                    TimeLineContent(
-                        item = values.first(),
-                        timeLineOption = timeLineOption,
-                        timeLinePadding = timeLinePadding,
-                        index = index,
-                        groupedSize = groupedItems.size,
-                        content = content
-                    )
-                }
-            } else {
-                stickyHeader {
-                    TimeLineContent(
-                        item = values.first(),
-                        timeLineOption = timeLineOption,
-                        timeLinePadding = timeLinePadding,
-                        index = index,
-                        groupedSize = groupedItems.size,
-                        hideCircle = true,
-                        content = content
-                    )
-                }
-
+            if (values.size > 1) {
                 items(values.drop(1)) { item ->
                     TimeLineContent(
                         item = item,
+                        items = items,
                         timeLineOption = timeLineOption,
                         timeLinePadding = timeLinePadding,
-                        index = index,
-                        groupedSize = groupedItems.size,
+                        hideCircle = true,
                         content = content
                     )
                 }
@@ -71,10 +69,9 @@ fun <K, E : TimeLineItem<K>> TimeLine(
 @Composable
 private fun <E> TimeLineContent(
     item: E,
+    items: List<E>,
     timeLineOption: TimeLineOption,
     timeLinePadding: TimeLinePadding,
-    index: Int,
-    groupedSize: Int,
     hideCircle: Boolean = false,
     content: @Composable (Modifier, E) -> Unit
 ) {
@@ -83,27 +80,27 @@ private fun <E> TimeLineContent(
             .fillMaxWidth()
             .height(timeLineOption.contentHeight)
     ) {
-        val (circle, topLine, bottomLine, timeLineContent) = createRefs()
+        val (circle, circleInnerLine, topLine, bottomLine, timeLineContent) = createRefs()
 
-        if (!hideCircle) {
-            Icon(
-                painter = painterResource(timeLineOption.circleIcon),
-                contentDescription = null,
-                tint = timeLineOption.circleColor,
-                modifier = Modifier
-                    .size(timeLineOption.circleSize)
-                    .constrainAs(circle) {
-                        start.linkTo(parent.start)
-                        top.linkTo(timeLineContent.top)
-                        bottom.linkTo(timeLineContent.bottom)
-                    }
-            )
-        } else {
-            Divider(
-                modifier = Modifier.constrainAs(circle) {
+        Icon(
+            painter = painterResource(timeLineOption.circleIcon),
+            contentDescription = null,
+            tint = if (!hideCircle) timeLineOption.circleColor else Color.Transparent,
+            modifier = Modifier
+                .size(timeLineOption.circleSize)
+                .constrainAs(circle) {
                     start.linkTo(parent.start)
                     top.linkTo(timeLineContent.top)
                     bottom.linkTo(timeLineContent.bottom)
+                }
+        )
+        if (hideCircle) {
+            Divider(
+                modifier = Modifier.constrainAs(circleInnerLine) {
+                    top.linkTo(circle.top)
+                    bottom.linkTo(circle.bottom)
+                    start.linkTo(circle.start)
+                    end.linkTo(circle.end)
                     width = Dimension.value(timeLineOption.lineWidth)
                     height = Dimension.fillToConstraints
                 },
@@ -118,11 +115,14 @@ private fun <E> TimeLineContent(
             },
             item
         )
-        if (index != 0) {
+        if (items.indexOf(item) != 0) {
             Divider(
                 modifier = Modifier.constrainAs(topLine) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(circle.top, timeLinePadding.circleLineGap)
+                    bottom.linkTo(
+                        circle.top,
+                        if (!hideCircle) timeLinePadding.circleLineGap else 0.dp
+                    )
                     start.linkTo(circle.start)
                     end.linkTo(circle.end)
                     width = Dimension.value(timeLineOption.lineWidth)
@@ -131,10 +131,13 @@ private fun <E> TimeLineContent(
                 color = timeLineOption.lineColor
             )
         }
-        if (index != groupedSize - 1) {
+        if (items.indexOf(item) != items.size - 1) {
             Divider(
                 modifier = Modifier.constrainAs(bottomLine) {
-                    top.linkTo(circle.bottom, timeLinePadding.circleLineGap)
+                    top.linkTo(
+                        circle.bottom,
+                        if (!hideCircle) timeLinePadding.circleLineGap else 0.dp
+                    )
                     bottom.linkTo(parent.bottom)
                     start.linkTo(circle.start)
                     end.linkTo(circle.end)

@@ -1,10 +1,10 @@
 package me.sungbin
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     // private data class Item(override val key: Int) : TimeLineItem<Int>
 
