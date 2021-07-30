@@ -26,7 +26,7 @@ data class Item(override val key: Int) : TimeLineItem<Int>
 
 
 
-#### TimeLineView<K>
+#### TimeLineView<K\>
 
 `K` value will be `TimeLineView-Header` item.
 
