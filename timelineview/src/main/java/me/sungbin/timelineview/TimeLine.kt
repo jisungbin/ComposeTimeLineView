@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 
-private const val headerIndex = -1
+private const val HeaderIndex = -1
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -46,7 +46,7 @@ fun <K, E : TimeLineItem<K>> TimeLine(
                     groupSize = groupedItems.size,
                     groupIndex = groupIndex,
                     elementsSize = elements.size,
-                    elementsIndex = headerIndex,
+                    elementsIndex = HeaderIndex,
                     timeLineOption = timeLineOption,
                     timeLinePadding = timeLinePadding,
                     isHeader = true,
@@ -133,7 +133,7 @@ private fun <K, E : TimeLineItem<K>> TimeLineView(
                 content(item)
             }
         }
-        if (!(groupIndex == 0 && elementsIndex == headerIndex)) {
+        if (!(groupIndex == 0 && elementsIndex == HeaderIndex)) {
             Divider(
                 modifier = Modifier.constrainAs(topLine) {
                     top.linkTo(parent.top)
