@@ -1,4 +1,4 @@
-# TimeLineView
+# ComposeTimeLineView
 
 android Sticky-TimeLineView that made with jetpack-compose.
 
